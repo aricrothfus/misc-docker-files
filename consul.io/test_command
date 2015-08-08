@@ -1,0 +1,13 @@
+docker run -p 80:80 -p 8400:8400 -p 8500:8500 -p 8600:53/udp -h node1 consul_0.5.2 agent -server -bootstrap -data-dir=/usr/local/consul/data -config-file=/usr/local/consul/consul.json -config-dir=/usr/local/consul -ui-dir=/usr/local/consul/ui
+
+curl 172.17.42.1:8500/v1/catalog/nodes
+dig @172.17.42.1 -p 8600 foo.foo.ffoo
+
+172.17.42.1 is the main docker interface ip
+
+
+https://github.com/gliderlabs/docker-consul/tree/legacy
+https://hub.docker.com/r/progrium/consul/
+https://github.com/gliderlabs/docker-consul/tree/legacy
+https://www.airpair.com/scalable-architecture-with-docker-consul-and-nginx
+http://progrium.com/blog/2014/08/20/consul-service-discovery-with-docker/
