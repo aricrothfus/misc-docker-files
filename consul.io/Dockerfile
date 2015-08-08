@@ -10,7 +10,7 @@ RUN mkdir -p /usr/local/consul/data \
     && unzip -d /usr/local/consul/ui /usr/local/consul/0.5.2_web_ui.zip
 #COPY ./docker-entrypoint.sh /usr/local/bin/
 #RUN chmod oga+x  /usr/local/bin/docker-entrypoint.sh
-RUN echo '{"service": {"name": "web", "tags": ["testit"], "port": 80}}' >/usr/local/consul/web.json
+RUN echo '{"service": {"name": "web", "tags": ["testit"], "port": 80,"address":"192.168.64.56"}}' >/usr/local/consul/web.json
 COPY consul.json /usr/local/consul/
 EXPOSE 8300 8301 8301/udp 8302 8302/udp 8400 8500 8600 8600/udp 80
 #ENV DNS_RESOLVES consul
