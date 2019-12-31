@@ -1,0 +1,71 @@
+version: '2'
+
+services:
+  redis:
+    image: 'redis:5.0.2'
+    restart: unless-stopped
+    container_name: srv_redis
+    command: "redis-server --requirepass yes --appendonly yes"
+    network_mode: bridge
+    ports:
+      - "6379:6379"
+    volumes:
+       - redis_data:/data
+  mongodb:
+    image: 'bitnami/mongodb:4.1'
+    restart: unless-stopped
+    container_name: srv_mongodb
+    labels:
+      kompose.service.type: nodeport
+    network_mode: bridge
+    ports:
+      - "27017:27017"
+    volumes:
+      - 'mongodb_data:/bitnami'
+  nginxfrontproxy:
+    image: nginx:latest
+    restart: always
+    container_name: nginxfrontproxy
+    network_mode: bridge
+    ports:
+      - "80:80"
+    volumes:
+      - /etc/docker/diskvolumes/nginxfrontproxy/etc/nginx.conf:/etc/nginx/nginx.conf
+      - /usr/local/apache2/proxy/htdocs/:/usr/share/nginx/html
+  dbsqlserver:
+    image: microsoft/mssql-server-linux:latest
+    restart: unless-stopped    
+    container_name: sqlserver
+    environment:
+      ACCEPT_EULA: y
+      SA_PASSWORD: "yes"
+      MSSQL_PID: Express
+    network_mode: bridge
+    ports:
+      - "1433:1433"
+    volumes:
+      - /srv/sqlserver/var/opt/mssql:/var/opt/mssql
+  kanboard:
+    image: kanboard/kanboard:latest
+    restart: unless-stopped    
+    container_name: kanboard
+    ports:
+      - "8103:80"
+    volumes:
+      - kanboard_data:/var/www/app/data
+      - kanboard_plugins:/var/www/app/plugins
+      - kanboard_ssl:/etc/nginx/ssl
+volumes:
+  mongodb_data:
+    driver: local
+  redis_data:
+    driver: local
+  kanboard_data:
+    driver: local
+  kanboard_plugins:
+    driver: local
+  kanboard_ssl:
+    driver: local    
+networks:
+  inside:
+    driver: bridge
